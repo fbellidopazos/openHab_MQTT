@@ -1,0 +1,11 @@
+{
+  "MQTT":{
+    "HOST":"192.168.1.44",
+    "PORT":1883,
+    "KEEPALIVE_INTERVAL":45,
+    "TOPICS":["SmartHome/Rooms/Boys/Main","SmartHome/Rooms/Boys/Bathroom"],
+    "USER":"openhabian",
+    "PASS": "openhabian"
+  },
+  "LEDS": [18,17]
+}

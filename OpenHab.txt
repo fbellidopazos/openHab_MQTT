@@ -1,0 +1,75 @@
+sudo nano /etc/openhab2/things/mqtt.things
+====================================================================================================================================
+Bridge  mqtt:broker:mqtt_broker [
+        host="127.0.0.1",
+        secure=false,
+        port=1883,
+        qos=0,
+        retain=false,
+        clientid="Oh2MqttClient",
+        keep_alive_time=30000,
+        reconnect_time=60000,
+        username="openhabian",
+        password="openhabian"
+        ] {
+        Thing   topic  mqtt        "MQTT" {
+                Channels:
+                        Type switch : BoysMain "BoysMain" [
+                                commandTopic="SmartHome/Rooms/Boys/Main",
+                                stateTopic="SmartHome/Rooms/Boys/Main/state",
+                                on="ON",
+                                off="OFF"
+                                ]
+                        Type switch : BoysBath "BoysBath" [
+                                                commandTopic="SmartHome/Rooms/Boys/Bathroom",
+                                                stateTopic="SmartHome/Rooms/Boys/Bathroom/state",
+                                                on="ON",
+                                                off="OFF"
+                                                ]
+                        Type number : Sensor "Sensor"[
+                                                stateTopic="SmartHome/sensor",
+                                                unit="ºC"
+                                                ]
+                        Type rollershutter : Roller "Roller"[
+                                                commandTopic="SmartHome/Roller",
+                                                stateTopic="SmartHome/Roller/state",
+                                                on="ON",
+                                                off="OFF",
+                                                stop="STOP"
+                                                ]
+                        Type colorRGB : led "led"[
+                                                commandTopic="SmartHome/led",
+                                                stateTopic="SmartHome/led/state",
+
+                                                ]
+                
+        }
+}
+
+sudo nano /etc/openhab2/items/home.items
+====================================================================================================================================
+Switch BoysMain "My Room" <Light> ["Lighting"]{ channel="mqtt:topic:mqtt_broker:mqtt:BoysMain"}
+Switch BoysBath "My Bathroom" <Light> ["Lighting"] { channel="mqtt:topic:mqtt_broker:mqtt:BoysBath"}
+Number mqtt_sensor "Sensor [%.2f ºC] <Temperature> {channel="mqtt:topic:mqtt_broker:mqtt:Sensor}
+Rollershutter Roller "Roller" <rollershutter> ["Switchable"] { channel="mqtt:topic:mqtt_broker:mqtt:Roller"}
+Color led "led" <colorlight> [ "Lighting" ] { channel="mqtt:topic:mqtt_broker:mqtt:led"}
+
+
+
+sudo nano /etc/openhab2/sitemaps/home.sitemap
+====================================================================================================================================
+sitemap home label="Smart Home"{
+Frame label="My Room"{
+	Switch item=BoysMain label="light"
+	Switch item=BoysBath label="light"
+        Text item=mqtt_sensor label="temperature"
+        Switch item=Roller label="rollershutter"
+        Colorpicker item=led 
+	}
+}
+
+
+https://www.openhab.org/addons/bindings/mqtt.generic/     
+https://www.openhab.org/docs/configuration/items.html#type
+https://www.openhab.org/docs/configuration/sitemaps.html#element-type-group
+https://www.mksmarthouse.com/amazon-echo
