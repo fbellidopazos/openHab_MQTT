@@ -137,3 +137,5 @@ dmypy.json
 *.code-workspace
 
 .idea/
+.vscode/launch.json
+.vscode/settings.json
